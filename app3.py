@@ -429,8 +429,7 @@ st.markdown(
         display: none !important;
     }
 
-    .stApp[data-testid="stSidebar"][aria-expanded="true"] 
-    button[data-testid="stExpandSidebarButton"]::before {
+    .stApp > div:first-child button[data-testid="stExpandSidebarButton"]::when-sidebar-open{
         content: "‹" !important;
         color: #7ba7ff !important;
     }
