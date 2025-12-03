@@ -440,6 +440,30 @@ st.markdown(
         color: #5d94ff !important;
     }
 
+    button[data-testid="stExpandSidebarButton"]::after {
+        content: "Toggle Sidebar" !important;
+        position: absolute !important;
+        left: 50px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        background: rgba(0,0,0,0.8) !important;
+        color: white !important;
+        padding: 4px 8px !important;
+        border-radius: 4px !important;
+        font-size: 0.8rem !important;
+        white-space: nowrap !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: opacity 0.3s ease !important;
+        z-index: 9999 !important;
+    }
+    
+    button[data-testid="stExpandSidebarButton"]:hover::after {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+
     /* ICON ERROR ================================================== */
     span:contains("keyboard_arrow_"),
     *:contains("keyboard_double_arrow") {
