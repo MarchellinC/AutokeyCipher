@@ -381,18 +381,6 @@ st.markdown(
         visibility: hidden !important;
     }
 
-    .streamlit-expanderHeader::after {
-        content: "▼" !important;
-        float: right !important;
-        font-size: 1.2rem !important;
-        color: #7ba7ff !important;
-        transition: transform 0.3s ease !important;
-    }
-
-    .streamlit-expanderHeader[aria-expanded="true"]::after {
-        content: "▲" !important;
-    }
-
     /* PREVIEW BOX ================================================== */
     .preview-box {
         background: rgba(255, 255, 255, 0.9);
@@ -407,20 +395,55 @@ st.markdown(
         display: none !important;
     }
     
-    button[data-testid="stExpandSidebarButton"]::before {
-        content: ">" !important;
-        font-size: 1.5rem !important;
-        display: inline-block !important;
-        color: #ff9ac9 !important;
+    button[data-testid="stExpandSidebarButton"] {
+        position: relative !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    button[data-testid="stExpandSidebarButton"]:hover {
+        background: white !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        transform: scale(1.05) !important;
     }
 
-    .stApp[data-testid="stSidebar"][aria-expanded="true"] 
     button[data-testid="stExpandSidebarButton"]::before {
-        content: "<" !important;
+        content: "›" !important;
+        font-size: 1.8rem !important;
+        font-weight: bold !important;
+        display: inline-block !important;
+        color: #ff9ac9 !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) rotate(0deg) !important;
+        transition: transform 0.3s ease !important;
+    }
+
+    [data-testid="stSidebar"][aria-expanded="true"] 
+    button[data-testid="stExpandSidebarButton"]::before {
+        content: "‹" !important;
+        color: #7ba7ff !important;
+    }
+    
+    /* Hover effect */
+    button[data-testid="stExpandSidebarButton"]:hover::before {
+        color: #ff6cb5 !important;
+    }
+    
+    [data-testid="stSidebar"][aria-expanded="true"] 
+    button[data-testid="stExpandSidebarButton"]:hover::before {
+        color: #5d94ff !important;
     }
 
     /* ICON ERROR ================================================== */
-    [class*="keyboard_"] {
+    span:contains("keyboard_arrow_"),
+    *:contains("keyboard_double_arrow") {
+        font-size: 0 !important;
         display: none !important;
         visibility: hidden !important;
         width: 0 !important;
