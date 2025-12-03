@@ -369,15 +369,15 @@ st.markdown(
     }
 
     /* EXPANDER ================================================== */
-    div.stTabs > div:nth-of-type(3) div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
-        display: none !important;
-    }
-
     div[data-testid="stExpander"] {
         background: rgba(255, 255, 255, 0.85);
         border-radius: 15px;
         border: 2px solid #cfe3ff;
         box-shadow: 0 4px 14px rgba(164, 198, 255, 0.3);
+    }
+
+    div.tab3-container div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
+        display: none !important;
     }
 
     /* PREVIEW BOX ================================================== */
@@ -832,8 +832,7 @@ with tab2:
 # TAB 3: PANDUAN
 # ======================================================
 with tab3:
-    st.markdown('<div class="tab3-expander">', unsafe_allow_html=True)
-
+    st.markdown('<div class="tab3-container">', unsafe_allow_html=True)
     st.markdown("""
     <div class="info-card">
         <h3>📖 Panduan Lengkap Autokey Cipher</h3>
@@ -1167,7 +1166,7 @@ with tab3:
         - CrypTool (educational crypto software)
         - dCode.fr (cipher analysis)
         """)
-
+    st.markdown('</div>', unsafe_allow_html=True)
 # ======================================================
 # FOOTER
 # ======================================================
