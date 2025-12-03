@@ -381,6 +381,18 @@ st.markdown(
         visibility: hidden !important;
     }
 
+    .streamlit-expanderHeader::after {
+        content: "▼" !important;
+        float: right !important;
+        font-size: 1.2rem !important;
+        color: #7ba7ff !important;
+        transition: transform 0.3s ease !important;
+    }
+
+    .streamlit-expanderHeader[aria-expanded="true"]::after {
+        content: "▲" !important;
+    }
+
     /* PREVIEW BOX ================================================== */
     .preview-box {
         background: rgba(255, 255, 255, 0.9);
@@ -388,6 +400,32 @@ st.markdown(
         border-radius: 12px;
         border-left: 5px solid #7ba7ff;
         margin: 1rem 0;
+    }
+
+    /* SIDEBAR ====================================================== */
+    button[data-testid="stExpandSidebarButton"] span[data-testid="stIconMaterial"] {
+        display: none !important;
+    }
+    
+    button[data-testid="stExpandSidebarButton"]::before {
+        content: ">" !important;
+        font-size: 1.5rem !important;
+        display: inline-block !important;
+        color: #ff9ac9 !important;
+    }
+
+    .stApp[data-testid="stSidebar"][aria-expanded="true"] 
+    button[data-testid="stExpandSidebarButton"]::before {
+        content: "<" !important;
+    }
+
+    /* ICON ERROR ================================================== */
+    [class*="keyboard_"] {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
     }
     </style>
     """,
