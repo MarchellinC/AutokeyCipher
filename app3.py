@@ -373,7 +373,7 @@ st.markdown(
         display: none !important;
     }
 
-    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] {
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
         padding-left: 12px !important;
     }
 
