@@ -371,7 +371,13 @@ st.markdown(
     /* EXPANDER ================================================== */
     div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
         display: none !important;
-        padding-left: 12px !important;
+    }
+
+    div[data-testid="stExpander"] > button > span[data-testid="stIconMaterial"] {
+        display: none !important;
+        width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     div[data-testid="stExpander"] {
