@@ -347,7 +347,6 @@ st.markdown(
         background: rgba(255, 255, 255, 0.85);
         border-radius: 12px;
         border: 2px solid #ffc5e5;
-        padding: 0.5rem 1rem;
     }
 
     /* FILE UPLOADER ================================================== */
