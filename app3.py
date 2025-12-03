@@ -1,6 +1,4 @@
 import streamlit as st
-import pandas as pd
-import re
 from io import BytesIO
 import base64
 from autokey_functions import *
