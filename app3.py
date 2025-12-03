@@ -369,22 +369,8 @@ st.markdown(
     }
 
     /* EXPANDER ================================================== */
-    div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
+    .main .element-container div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
         display: none !important;
-    }
-
-    div[data-testid="stExpander"] > button > span:first-child {
-        width: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        min-width: 0 !important;
-    }
-
-    div[data-testid="stExpander"] > button {
-        display: flex !important;
-        align-items: center !important;
-        gap: 4px !important;       
-        padding-left: 8px !important; 
     }
 
     div[data-testid="stExpander"] {
