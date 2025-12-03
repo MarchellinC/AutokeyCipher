@@ -370,11 +370,8 @@ st.markdown(
     }
 
     /* EXPANDER ================================================== */
-    div[data-testid="stExpander"] > button {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;  /* jarak ikon & teks */
-        font-size: 1.1rem !important;
+    div[data-testid="stExpander"] > button > span[data-testid="stIconMaterial"] {
+        display: none !important;
     }
 
     div[data-testid="stExpander"] {
