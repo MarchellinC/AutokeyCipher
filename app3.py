@@ -424,7 +424,12 @@ st.markdown(
         transition: transform 0.3s ease !important;
     }
 
-     [data-testid="stSidebar"][aria-expanded="true"] 
+    .st-emotion-cache-pd6qx2,
+    .ejhh0er0 {
+        display: none !important;
+    }
+
+    [data-testid="stSidebar"][aria-expanded="true"] 
     button[data-testid="stExpandSidebarButton"]::before {
         content: "‹" !important;
         color: #7ba7ff !important;
@@ -439,18 +444,19 @@ st.markdown(
     button[data-testid="stExpandSidebarButton"]:hover::before {
         color: #5d94ff !important;
     }
-
-    /* ICON ERROR ================================================== */
-    span:contains("keyboard_arrow_"),
-    *:contains("keyboard_double_arrow") {
-        font-size: 0 !important;
-        display: none !important;
-        visibility: hidden !important;
-        width: 0 !important;
-        height: 0 !important;
-        overflow: hidden !important;
+    
+    /* CARA EXTREME: Gunakan visibility: collapse untuk semua teks di button */
+    button[data-testid="stExpandSidebarButton"] {
+        visibility: visible !important;
     }
-    </style>
+
+     button[data-testid="stExpandSidebarButton"] * {
+        visibility: collapse !important;
+    }
+    
+    button[data-testid="stExpandSidebarButton"]::before {
+        visibility: visible !important;
+    }
     """,
     unsafe_allow_html=True
 )
