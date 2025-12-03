@@ -369,15 +369,8 @@ st.markdown(
     }
 
     /* EXPANDER ================================================== */
-    .tab3-expander div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
+    div.stTabs > div:nth-of-type(3) div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
         display: none !important;
-    }
-
-    .tab3-expander div[data-testid="stExpander"] > button > span:first-child {
-        width: 0 !important;
-        min-width: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
     }
 
     .tab3-expander div[data-testid="stExpander"] {
