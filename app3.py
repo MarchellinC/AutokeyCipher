@@ -429,33 +429,34 @@ st.markdown(
         display: none !important;
     }
 
+    button[data-testid="stExpandSidebarButton"]::before {
+        content: "›" !important; /* default */
+        font-size: 1.8rem !important;
+        font-weight: bold !important;
+        color: #ff9ac9 !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) rotate(0deg) !important;
+        pointer-events: none; /* supaya klik masih jalan */
+    }
+
     [data-testid="stSidebar"][aria-expanded="true"] 
     button[data-testid="stExpandSidebarButton"]::before {
-        content: "‹" !important;
+        content: "‹" !important; /* saat sidebar terbuka */
         color: #7ba7ff !important;
     }
-    
-    /* Hover effect */
+    button[data-testid="stExpandSidebarButton"] span[data-testid="stText"] {
+        display: none !important;
+    }
+
     button[data-testid="stExpandSidebarButton"]:hover::before {
         color: #ff6cb5 !important;
     }
-    
+
     [data-testid="stSidebar"][aria-expanded="true"] 
     button[data-testid="stExpandSidebarButton"]:hover::before {
         color: #5d94ff !important;
-    }
-    
-    /* CARA EXTREME: Gunakan visibility: collapse untuk semua teks di button */
-    button[data-testid="stExpandSidebarButton"] {
-        visibility: visible !important;
-    }
-
-     button[data-testid="stExpandSidebarButton"] * {
-        visibility: collapse !important;
-    }
-    
-    button[data-testid="stExpandSidebarButton"]::before {
-        visibility: visible !important;
     }
     """,
     unsafe_allow_html=True
