@@ -430,24 +430,17 @@ st.markdown(
     }
 
     .stApp[data-testid="stSidebar"][aria-expanded="true"] 
-    button[data-testid="stExpandSidebarButton"]::after {
+    button[data-testid="stExpandSidebarButton"]::before {
         content: "‹" !important;
         color: #7ba7ff !important;
     }
     
-    /* HOVER EFFECT */
-    button[data-testid="stExpandSidebarButton"]:hover {
-        background: white !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-        transform: scale(1.05) !important;
-    }
-    
-    button[data-testid="stExpandSidebarButton"]:hover::after {
+    button[data-testid="stExpandSidebarButton"]:hover::before {
         color: #ff6cb5 !important;
     }
     
-    [data-testid="stSidebar"][aria-expanded="true"] 
-    button[data-testid="stExpandSidebarButton"]:hover::after {
+    .stApp[data-testid="stSidebar"][aria-expanded="true"] 
+    button[data-testid="stExpandSidebarButton"]:hover::before {
         color: #5d94ff !important;
     }
     """,
