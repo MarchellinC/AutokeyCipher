@@ -376,6 +376,10 @@ st.markdown(
         padding: 0 !important;
     }
 
+    div[data-testid="stExpander"] > button > span:first-child {
+        display: contents !important; 
+    }
+
     div[data-testid="stExpander"] {
         background: rgba(255, 255, 255, 0.85);
         border-radius: 15px;
