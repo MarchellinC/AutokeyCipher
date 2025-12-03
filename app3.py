@@ -370,11 +370,11 @@ st.markdown(
     }
 
     /* EXPANDER ================================================== */
-    .stExpanderHeader {
-        display: flex;
-        align-items: center;
-        gap: 8px;  /* jarak antara ikon dan teks */
-        font-size: 1.1rem;
+    div[data-testid="stExpander"] > button {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;  /* jarak ikon & teks */
+        font-size: 1.1rem !important;
     }
 
     div[data-testid="stExpander"] {
