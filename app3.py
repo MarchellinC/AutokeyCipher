@@ -371,9 +371,6 @@ st.markdown(
     /* EXPANDER ================================================== */
     div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
         display: none !important;
-    }
-
-    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"]  {
         padding-left: 12px !important;
     }
 
