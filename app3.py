@@ -839,8 +839,6 @@ with tab2:
 # TAB 3: PANDUAN
 # ======================================================
 with tab3:
-    st.markdown('<div class="tab3-expander">', unsafe_allow_html=True)
-
     st.markdown("""
     <div class="info-card">
         <h3>📖 Panduan Lengkap Autokey Cipher</h3>
@@ -849,6 +847,7 @@ with tab3:
     
     st.markdown("---")
     
+    st.markdown('<div class="tab3-expander">', unsafe_allow_html=True)
     # Penjelasan Autokey Cipher
     with st.expander("📚 Apa itu Autokey Cipher?", expanded=True):
         st.markdown("""
