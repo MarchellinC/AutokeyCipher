@@ -429,7 +429,7 @@ st.markdown(
         display: none !important;
     }
 
-    button[data-testid="stExpandSidebarButton"]::before {
+    button[data-testid="stExpandSidebarButton"]::after {
         content: "›" !important; /* default */
         font-size: 1.8rem !important;
         font-weight: bold !important;
@@ -442,7 +442,7 @@ st.markdown(
     }
 
     [data-testid="stSidebar"][aria-expanded="true"] 
-    button[data-testid="stExpandSidebarButton"]::before {
+    button[data-testid="stExpandSidebarButton"]::after {
         content: "‹" !important; /* saat sidebar terbuka */
         color: #7ba7ff !important;
     }
@@ -450,12 +450,12 @@ st.markdown(
         display: none !important;
     }
 
-    button[data-testid="stExpandSidebarButton"]:hover::before {
+    button[data-testid="stExpandSidebarButton"]:hover::after {
         color: #ff6cb5 !important;
     }
 
     [data-testid="stSidebar"][aria-expanded="true"] 
-    button[data-testid="stExpandSidebarButton"]:hover::before {
+    button[data-testid="stExpandSidebarButton"]:hover::after {
         color: #5d94ff !important;
     }
     """,
