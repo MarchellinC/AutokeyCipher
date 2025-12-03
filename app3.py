@@ -295,14 +295,6 @@ st.markdown(
         font-weight: 500;
     }
 
-    /* ICON & TEXT CONTAINER======================================== */
-    .icon-text-container {
-        display: flex;
-        align-items: center; /* vertikal align */
-        gap: 8px;            /* jarak antara ikon & teks */
-        font-size: 1.2rem;
-    }
-
     /* INFO CARD ================================================== */
     .info-card {
         background: rgba(255, 255, 255, 0.95);
@@ -378,6 +370,13 @@ st.markdown(
     }
 
     /* EXPANDER ================================================== */
+    .stExpanderHeader {
+        display: flex;
+        align-items: center;
+        gap: 8px;  /* jarak antara ikon dan teks */
+        font-size: 1.1rem;
+    }
+
     div[data-testid="stExpander"] {
         background: rgba(255, 255, 255, 0.85);
         border-radius: 15px;
