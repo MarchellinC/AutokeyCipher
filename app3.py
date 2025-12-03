@@ -428,30 +428,6 @@ st.markdown(
     .ejhh0er0 {
         display: none !important;
     }
-
-    button[data-testid="stExpandSidebarButton"]::after {
-        content: "‹" !important;
-        font-size: 1.8rem !important;
-        font-weight: bold !important;
-        color: #7ba7ff !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        font-family: Arial, sans-serif !important;
-        pointer-events: none !important;
-        z-index: 9 !important;
-        opacity: 0 !important; /* Sembunyikan dulu */
-        transition: opacity 0.3s ease !important;
-    }
-
-    button[data-testid="stExpandSidebarButton"]:hover::before {
-        color: #ff6cb5 !important;
-    }
-    
-    button[data-testid="stExpandSidebarButton"]:hover::after {
-        color: #5d94ff !important;
-    }
     """,
     unsafe_allow_html=True
 )
