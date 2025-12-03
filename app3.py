@@ -3,444 +3,19 @@ import pandas as pd
 import re
 from io import BytesIO
 import base64
-
-# ======================================================
-# HELPER FUNCTIONS
-# ======================================================
-def charToNum(c):
-    return ord(c) - ord("A")
-
-def numToChar(n):
-    return chr(n + ord("A"))
-
-def normalizeText(s: str) -> str:
-    s = s.replace("\r", "\n")
-    s = re.sub(r"\s+", " ", s)
-    return s.strip()
-
-def onlyLettersUpper(s: str) -> str:
-    return re.sub(r"[^A-Z]", "", s.upper())
-
-# ======================================================
-# TEXT ENCRYPTION (Autokey Cipher)
-# ======================================================
-def autokeyEncrypt(plaintext, key):
-    plaintext = normalizeText(plaintext).upper()
-    key = onlyLettersUpper(key)
-
-    keyStream = list(key)
-    ciphertext = ""
-
-    table = {
-        "PT": [], "n(PT)": [],
-        "K": [], "n(K)": [],
-        "(nPT+nK)%26": [],
-        "CT": [], "n(CT)": [],
-        "KeyStream": []
-    }
-
-    ki = 0
-    for c in plaintext:
-        if c == " ":
-            ciphertext += " "
-            table["PT"].append(" ")
-            table["n(PT)"].append("")
-            table["K"].append("")
-            table["n(K)"].append("")
-            table["(nPT+nK)%26"].append("")
-            table["CT"].append(" ")
-            table["n(CT)"].append("")
-            table["KeyStream"].append("".join(keyStream))
-            continue
-
-        if not c.isalpha():
-            continue
-
-        while ki < len(keyStream) and not keyStream[ki].isalpha():
-            ki += 1
-
-        if ki < len(keyStream):
-            k = keyStream[ki]
-        else:
-            k = "A"
-
-        ptN = charToNum(c)
-        kN = charToNum(k)
-        ctN = (ptN + kN) % 26
-        ct = numToChar(ctN)
-
-        ciphertext += ct
-        keyStream.append(c)
-        ki += 1
-
-        table["PT"].append(c)
-        table["n(PT)"].append(ptN)
-        table["K"].append(k)
-        table["n(K)"].append(kN)
-        table["(nPT+nK)%26"].append(ctN)
-        table["CT"].append(ct)
-        table["n(CT)"].append(ctN)
-        table["KeyStream"].append("".join(keyStream))
-
-    return ciphertext, pd.DataFrame(table)
-
-# ======================================================
-# TEXT DECRYPTION (Autokey Cipher)
-# ======================================================
-def autokeyDecrypt(ciphertext, key):
-    ciphertext = normalizeText(ciphertext).upper()
-    key = onlyLettersUpper(key)
-
-    keyStream = list(key)
-    plaintext = ""
-
-    table = {
-        "CT": [], "n(CT)": [],
-        "K": [], "n(K)": [],
-        "(nCT-nK)%26": [],
-        "PT": [], "n(PT)": [],
-        "KeyStream": []
-    }
-
-    ki = 0
-    for c in ciphertext:
-        if c == " ":
-            plaintext += " "
-            table["CT"].append(" ")
-            table["n(CT)"].append("")
-            table["K"].append("")
-            table["n(K)"].append("")
-            table["(nCT-nK)%26"].append("")
-            table["PT"].append(" ")
-            table["n(PT)"].append("")
-            table["KeyStream"].append("".join(keyStream))
-            continue
-
-        if not c.isalpha():
-            continue
-
-        while ki < len(keyStream) and not keyStream[ki].isalpha():
-            ki += 1
-
-        if ki < len(keyStream):
-            k = keyStream[ki]
-        else:
-            k = "A"
-
-        ctN = charToNum(c)
-        kN = charToNum(k)
-        ptN = (ctN - kN) % 26
-        pt = numToChar(ptN)
-
-        plaintext += pt
-        keyStream.append(pt)
-        ki += 1
-
-        table["CT"].append(c)
-        table["n(CT)"].append(ctN)
-        table["K"].append(k)
-        table["n(K)"].append(kN)
-        table["(nCT-nK)%26"].append(ptN)
-        table["PT"].append(pt)
-        table["n(PT)"].append(ptN)
-        table["KeyStream"].append("".join(keyStream))
-
-    return plaintext, pd.DataFrame(table)
-
-# ======================================================
-# FIND KEY (Key Recovery Attack)
-# ======================================================
-def findKey(plaintext, ciphertext):
-    plaintext = normalizeText(plaintext).upper()
-    ciphertext = normalizeText(ciphertext).upper()
-
-    keystream = ""
-    table = {
-        "PT": [], "n(PT)": [],
-        "CT": [], "n(CT)": [],
-        "(nCT-nPT)%26": [],
-        "Key": [], "n(Key)": []
-    }
-
-    for pt, ct in zip(plaintext, ciphertext):
-        if not pt.isalpha() or not ct.isalpha():
-            table["PT"].append(pt)
-            table["n(PT)"].append("")
-            table["CT"].append(ct)
-            table["n(CT)"].append("")
-            table["(nCT-nPT)%26"].append("")
-            table["Key"].append(" ")
-            table["n(Key)"].append("")
-            continue
-
-        ptN = charToNum(pt)
-        ctN = charToNum(ct)
-        kN = (ctN - ptN) % 26
-        k = numToChar(kN)
-
-        keystream += k
-
-        table["PT"].append(pt)
-        table["n(PT)"].append(ptN)
-        table["CT"].append(ct)
-        table["n(CT)"].append(ctN)
-        table["(nCT-nPT)%26"].append(kN)
-        table["Key"].append(k)
-        table["n(Key)"].append(kN)
-
-    plain_no_space = onlyLettersUpper(plaintext)
-    idx = keystream.find(plain_no_space[:5])
-    if idx != -1:
-        real_key = keystream[:idx]
-    else:
-        real_key = keystream
-
-    return real_key, pd.DataFrame(table)
-
-# ======================================================
-# BINARY FILE ENCRYPTION (File Biner Implementation)
-# ======================================================
-def autokeyEncryptBytes(data: bytes, key: str) -> bytes:
-    """
-    Enkripsi file biner byte-per-byte menggunakan Autokey Cipher.
-    Header file ikut terenkripsi sehingga file tidak bisa dibuka.
-    """
-    if not key:
-        raise ValueError("Key tidak boleh kosong!")
-    
-    key_bytes = key.encode("utf-8")
-    keyStream = bytearray(key_bytes)
-    result = bytearray()
-
-    for i, b in enumerate(data):
-        if i < len(keyStream):
-            k = keyStream[i]
-        else:
-            k = keyStream[i % len(key_bytes)]
-        
-        ct = (b + k) % 256
-        result.append(ct)
-        keyStream.append(b)
-
-    return bytes(result)
-
-# ======================================================
-# BINARY FILE DECRYPTION (File Biner Implementation)
-# ======================================================
-def autokeyDecryptBytes(data: bytes, key: str) -> bytes:
-    """
-    Dekripsi file biner byte-per-byte menggunakan Autokey Cipher.
-    File akan kembali ke kondisi semula dan bisa dibuka.
-    """
-    if not key:
-        raise ValueError("Key tidak boleh kosong!")
-    
-    key_bytes = key.encode("utf-8")
-    keyStream = bytearray(key_bytes)
-    result = bytearray()
-
-    for i, b in enumerate(data):
-        if i < len(keyStream):
-            k = keyStream[i]
-        else:
-            k = keyStream[i % len(key_bytes)]
-        
-        pt = (b - k) % 256
-        result.append(pt)
-        keyStream.append(pt)
-
-    return bytes(result)
+from autokey_functions import *
+from styles import *
 
 # ======================================================
 # UI STYLING — Pastel Pink & Blue Soft Theme
 # ======================================================
 st.set_page_config(page_title="Autokey Cipher", page_icon="🔐", layout="wide", initial_sidebar_state="expanded")
-
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-    * {
-        font-family: 'Poppins', sans-serif !important;
-    }
-
-    /* Background pastel soft */
-    .stApp {
-        background: linear-gradient(135deg, #ffe7f3 0%, #e3f0ff 50%, #f9e6ff 100%);
-    }
-
-    /* HEADER ================================================== */
-    .main-header {
-        text-align: center;
-        padding: 2rem 0;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        box-shadow: 0 6px 20px rgba(255, 182, 193, 0.25);
-    }
-
-    .main-header h1 {
-        color: #ff9ac9;
-        font-size: 3rem;
-        font-weight: 700;
-        margin: 0;
-        text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.25);
-    }
-
-    .main-header p {
-        color: #7ba7ff;
-        font-size: 1.2rem;
-        margin-top: 0.5rem;
-        font-weight: 500;
-    }
-
-    /* INFO CARD ================================================== */
-    .info-card {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 1.5rem;
-        border-radius: 18px;
-        margin: 1rem 0;
-        box-shadow: 0 4px 14px rgba(255, 182, 193, 0.25);
-        border-left: 5px solid #ffb8e6;
-    }
-
-    .info-card h3 {
-        color: #ff87c4;
-        margin-top: 0;
-        font-weight: 600;
-    }
-
-    /* FEATURE BOX ================================================== */
-    .feature-box {
-        background: linear-gradient(135deg, #ffd4ec 0%, #cfe3ff 100%);
-        padding: 1.5rem;
-        border-radius: 18px;
-        margin: 1rem 0;
-        color: #4a4a4a;
-        box-shadow: 0 4px 16px rgba(255, 182, 193, 0.3);
-        border: 2px solid rgba(255, 182, 193, 0.5);
-    }
-
-    /* BUTTON ================================================== */
-    .stButton>button {
-        background: linear-gradient(135deg, #ff9ac9 0%, #a4c6ff 100%);
-        color: white;
-        border: none;
-        padding: 0.75rem 2rem;
-        border-radius: 30px;
-        font-weight: 600;
-        font-size: 1.1rem;
-        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.5);
-        transition: all 0.3s ease;
-    }
-
-    .stButton>button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 22px rgba(255, 182, 193, 0.7);
-    }
-
-    /* INPUT FIELD ================================================== */
-    .stTextInput>div>div, 
-    .stTextArea>div>div, 
-    .stSelectbox>div>div {
-        background: rgba(255, 255, 255, 0.85);
-        border-radius: 12px;
-        border: 2px solid #ffc5e5;
-    }
-
-    /* FILE UPLOADER ================================================== */
-    .stFileUploader {
-        background: rgba(255, 255, 255, 0.85);
-        padding: 1.5rem;
-        border-radius: 18px;
-        border: 2px dashed #a4c6ff;
-        box-shadow: 0 4px 12px rgba(164, 198, 255, 0.4);
-    }
-
-    /* SUCCESS BOX ================================================== */
-    .success-box {
-        background: linear-gradient(135deg, #e7fff6 0%, #ffe6f3 100%);
-        padding: 1rem;
-        border-radius: 12px;
-        margin: 1rem 0;
-        border-left: 5px solid #89ffd8;
-        box-shadow: 0 4px 14px rgba(160, 255, 224, 0.4);
-    }
-
-    /* EXPANDER ================================================== */
-    div[data-testid="stExpander"] {
-        background: rgba(255, 255, 255, 0.85);
-        border-radius: 15px;
-        border: 2px solid #cfe3ff;
-        box-shadow: 0 4px 14px rgba(164, 198, 255, 0.3);
-    }
-
-    [data-testid="stExpander"] span[data-testid="stIconMaterial"] {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* PREVIEW BOX ================================================== */
-    .preview-box {
-        background: rgba(255, 255, 255, 0.9);
-        padding: 1rem;
-        border-radius: 12px;
-        border-left: 5px solid #7ba7ff;
-        margin: 1rem 0;
-    }
-
-    /* SIDEBAR ====================================================== */
-    button[data-testid="stExpandSidebarButton"] span[data-testid="stIconMaterial"] {
-        display: none !important;
-    }
-    
-    button[data-testid="stExpandSidebarButton"] {
-        position: relative !important;
-        min-width: 44px !important;
-        min-height: 44px !important;
-        background: rgba(255, 255, 255, 0.9) !important;
-        border-radius: 50% !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-        transition: all 0.3s ease !important;
-    }
-    
-    button[data-testid="stExpandSidebarButton"]:hover {
-        background: white !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-        transform: scale(1.05) !important;
-    }
-
-    button[data-testid="stExpandSidebarButton"]::before {
-        content: "›" !important;
-        font-size: 1.8rem !important;
-        font-weight: bold !important;
-        display: inline-block !important;
-        color: #ff9ac9 !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) rotate(0deg) !important;
-        transition: transform 0.3s ease !important;
-    }
-
-    .st-emotion-cache-pd6qx2,
-    .ejhh0er0 {
-        display: none !important;
-    }
-    """,
-    unsafe_allow_html=True
-)
+st.markdown(ui_styling, unsafe_allow_html=True)
 
 # ======================================================
 # HEADER
 # ======================================================
-st.markdown("""
-    <div class="main-header">
-        <h1>🔐 Autokey Cipher</h1>
-        <p>Advanced Cryptography Application - Complete File Encryption System</p>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown(header, unsafe_allow_html=True)
 
 # ======================================================
 # SIDEBAR - INFORMASI
@@ -676,14 +251,7 @@ with tab1:
 
     # INPUT FILE SEMBARANG (File Biner)
     else:
-        st.markdown("""
-        <div class="info-card">
-            <h3>🔒 Enkripsi File Biner - Implementasi File Biner</h3>
-            <p>Fitur ini mengenkripsi <strong>seluruh byte dalam file</strong>, termasuk header. 
-            File yang terenkripsi tidak akan bisa dibuka sampai didekripsi kembali dengan key yang benar.</p>
-            <p><strong>Mendukung:</strong> PDF, DOCX, XLSX, PNG, JPG, MP3, MP4, ZIP, dan semua format file!</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(enkripsi_file_biner, unsafe_allow_html=True)
         
         uploaded_file = st.file_uploader(
             "📁 Upload File Sembarang",
@@ -699,9 +267,9 @@ with tab1:
             }
             
             col1, col2, col3 = st.columns(3)
-            col1.metric("📄 Nama", file_details["Nama File"])
-            col2.metric("📦 Tipe", file_details["Tipe"])
-            col3.metric("💾 Ukuran", file_details["Ukuran"])
+            col1.markdown(file_details_card.format(label="📄 Nama", value=file_details["Nama File"]), unsafe_allow_html=True)
+            col2.markdown(file_details_card.format(label="📦 Tipe", value=file_details["Tipe"]), unsafe_allow_html=True)
+            col3.markdown(file_details_card.format(label="💾 Ukuran", value=file_details["Ukuran"]), unsafe_allow_html=True)
         
         key_input = st.text_input(
             "🔑 Masukkan Key untuk Enkripsi/Dekripsi:",
@@ -784,14 +352,7 @@ with tab1:
 # TAB 2: FIND KEY
 # ======================================================
 with tab2:
-    st.markdown("""
-    <div class="info-card">
-        <h3>🔍 Key Recovery Attack</h3>
-        <p>Fitur ini memungkinkan Anda menemukan key yang digunakan untuk enkripsi 
-        jika Anda memiliki plaintext dan ciphertext yang sesuai.</p>
-        <p><strong>Catatan:</strong> Ini adalah serangan kriptanalisis known-plaintext attack.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(key_recovery, unsafe_allow_html=True)
     
     input_method = st.radio(
         "Pilih Metode Input:",
@@ -871,11 +432,7 @@ with tab2:
 # TAB 3: PANDUAN
 # ======================================================
 with tab3:
-    st.markdown("""
-    <div class="info-card">
-        <h3>📖 Panduan Lengkap Autokey Cipher</h3>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(panduan, unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -1209,15 +766,4 @@ with tab3:
 # FOOTER
 # ======================================================
 st.markdown("---")
-st.markdown("""
-    <div style="text-align: center; padding: 2rem; background: rgba(255,255,255,0.9); border-radius: 15px;">
-        <h3 style="color: #667eea; margin-bottom: 1rem;">🔐 Autokey Cipher Application</h3>
-        <p style="color: #764ba2;">
-            Developed for Cryptography Learning & Education<br>
-            <em>Teknik Informatika - Universitas Padjadjaran</em>
-        </p>
-        <p style="color: #888; margin-top: 1rem; font-size: 0.9rem;">
-            © 2025 - Built with Streamlit & Python
-        </p>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown(footer, unsafe_allow_html=True)
