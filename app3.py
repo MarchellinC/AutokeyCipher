@@ -373,6 +373,10 @@ st.markdown(
         display: none !important;
     }
 
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] {
+        padding-left: 12px !important;
+    }
+
     div[data-testid="stExpander"] {
         background: rgba(255, 255, 255, 0.85);
         border-radius: 15px;
