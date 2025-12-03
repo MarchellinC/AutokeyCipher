@@ -429,7 +429,7 @@ st.markdown(
         display: none !important;
     }
 
-    div[data-testid="stSidebar"][aria-expanded="true"] 
+    .stApp[data-testid="stSidebar"][aria-expanded="true"] 
     button[data-testid="stExpandSidebarButton"]::after {
         content: "‹" !important;
         color: #7ba7ff !important;
