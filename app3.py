@@ -254,7 +254,7 @@ def autokeyDecryptBytes(data: bytes, key: str) -> bytes:
 # ======================================================
 # UI STYLING — Pastel Pink & Blue Soft Theme
 # ======================================================
-st.set_page_config(page_title="Autokey Cipher", page_icon="🔐", layout="wide")
+st.set_page_config(page_title="Autokey Cipher", page_icon="🔐", layout="wide", initial_sidebar_state="expanded")
 
 st.markdown(
     """
@@ -376,6 +376,11 @@ st.markdown(
         box-shadow: 0 4px 14px rgba(164, 198, 255, 0.3);
     }
 
+    [data-testid="stExpander"] span[data-testid="stIconMaterial"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
     /* PREVIEW BOX ================================================== */
     .preview-box {
         background: rgba(255, 255, 255, 0.9);
@@ -383,24 +388,6 @@ st.markdown(
         border-radius: 12px;
         border-left: 5px solid #7ba7ff;
         margin: 1rem 0;
-    }
-
-    [data-testid="stSidebar"] {
-        background: rgba(255, 255, 255, 0.95);
-    }
-
-    [data-testid="stSidebar"] .sidebar-content {
-        overflow: visible !important;
-    }
-
-    /* FIX untuk konten yang terpotong */
-    .streamlit-expanderHeader {
-        font-size: 1.1rem !important;
-        font-weight: 600 !important;
-    }
-
-    .streamlit-expanderContent {
-        padding: 1rem !important;
     }
     </style>
     """,
