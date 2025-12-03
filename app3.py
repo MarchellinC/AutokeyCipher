@@ -429,31 +429,23 @@ st.markdown(
         display: none !important;
     }
 
-    button[data-testid="stExpandSidebarButton"]::after {
-        content: "›" !important; /* default */
-        font-size: 1.8rem !important;
-        font-weight: bold !important;
-        color: #ff9ac9 !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) rotate(0deg) !important;
-        pointer-events: none; /* supaya klik masih jalan */
-    }
-
     [data-testid="stSidebar"][aria-expanded="true"] 
     button[data-testid="stExpandSidebarButton"]::after {
-        content: "‹" !important; /* saat sidebar terbuka */
+        content: "‹" !important;
         color: #7ba7ff !important;
     }
-    button[data-testid="stExpandSidebarButton"] span[data-testid="stText"] {
-        display: none !important;
+    
+    /* HOVER EFFECT */
+    button[data-testid="stExpandSidebarButton"]:hover {
+        background: white !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        transform: scale(1.05) !important;
     }
-
+    
     button[data-testid="stExpandSidebarButton"]:hover::after {
         color: #ff6cb5 !important;
     }
-
+    
     [data-testid="stSidebar"][aria-expanded="true"] 
     button[data-testid="stExpandSidebarButton"]:hover::after {
         color: #5d94ff !important;
