@@ -295,6 +295,14 @@ st.markdown(
         font-weight: 500;
     }
 
+    /* ICON & TEXT CONTAINER======================================== */
+    .icon-text-container {
+        display: flex;
+        align-items: center; /* vertikal align */
+        gap: 8px;            /* jarak antara ikon & teks */
+        font-size: 1.2rem;
+    }
+
     /* INFO CARD ================================================== */
     .info-card {
         background: rgba(255, 255, 255, 0.95);
