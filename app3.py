@@ -369,7 +369,7 @@ st.markdown(
     }
 
     /* EXPANDER ================================================== */
-    .main .element-container div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
+    div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
         display: none !important;
     }
 
