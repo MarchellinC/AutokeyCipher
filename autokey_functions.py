@@ -186,7 +186,7 @@ def findKey(plaintext, ciphertext):
         table["n(Key)"].append(kN)
 
     plain_no_space = onlyLettersUpper(plaintext)
-    idx = keystream.find(plain_no_space[:3])
+    idx = keystream.find(plain_no_space[:5])
     if idx != -1:
         real_key = keystream[:idx]
     else:
