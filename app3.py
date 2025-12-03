@@ -356,7 +356,7 @@ with tab2:
     
     input_method = st.radio(
         "Pilih Metode Input:",
-        ["Input Manual", "Upload File"]
+        ["Input Manual", "Upload File .txt"]
     )
     
     if input_method == "Input Manual":
