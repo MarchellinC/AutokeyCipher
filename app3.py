@@ -373,7 +373,7 @@ st.markdown(
         display: none !important;
     }
 
-    .tab3-expander div[data-testid="stExpander"] {
+    div[data-testid="stExpander"] {
         background: rgba(255, 255, 255, 0.85);
         border-radius: 15px;
         border: 2px solid #cfe3ff;
@@ -832,6 +832,8 @@ with tab2:
 # TAB 3: PANDUAN
 # ======================================================
 with tab3:
+    st.markdown('<div class="tab3-expander">', unsafe_allow_html=True)
+
     st.markdown("""
     <div class="info-card">
         <h3>📖 Panduan Lengkap Autokey Cipher</h3>
@@ -840,7 +842,6 @@ with tab3:
     
     st.markdown("---")
     
-    st.markdown('<div class="tab3-expander">', unsafe_allow_html=True)
     # Penjelasan Autokey Cipher
     with st.expander("📚 Apa itu Autokey Cipher?", expanded=True):
         st.markdown("""
@@ -1166,8 +1167,6 @@ with tab3:
         - CrypTool (educational crypto software)
         - dCode.fr (cipher analysis)
         """)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # ======================================================
 # FOOTER
