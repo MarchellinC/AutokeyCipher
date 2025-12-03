@@ -1174,6 +1174,8 @@ with tab3:
         - CrypTool (educational crypto software)
         - dCode.fr (cipher analysis)
         """)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ======================================================
 # FOOTER
