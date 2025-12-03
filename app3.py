@@ -369,11 +369,18 @@ st.markdown(
     }
 
     /* EXPANDER ================================================== */
-    div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
+    .tab3-expander div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
         display: none !important;
     }
 
-    div[data-testid="stExpander"] {
+    .tab3-expander div[data-testid="stExpander"] > button > span:first-child {
+        width: 0 !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .tab3-expander div[data-testid="stExpander"] {
         background: rgba(255, 255, 255, 0.85);
         border-radius: 15px;
         border: 2px solid #cfe3ff;
@@ -832,6 +839,8 @@ with tab2:
 # TAB 3: PANDUAN
 # ======================================================
 with tab3:
+    st.markdown('<div class="tab3-expander">', unsafe_allow_html=True)
+
     st.markdown("""
     <div class="info-card">
         <h3>📖 Panduan Lengkap Autokey Cipher</h3>
