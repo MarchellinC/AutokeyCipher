@@ -370,7 +370,7 @@ st.markdown(
     }
 
     /* EXPANDER ================================================== */
-    div[data-testid="stExpander"] > button > span[data-testid="stIconMaterial"] {
+    div[data-testid="stExpander"] span[data-testid="stIconMaterial"] {
         display: none !important;
     }
 
